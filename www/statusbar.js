@@ -85,9 +85,17 @@ var StatusBar = {
         exec(null, null, "StatusBar", "backgroundColorByHexString", [hexString]);
     },
 
+    hideSpinner: function () {
+        exec(null, null, "StatusBar", "hideSpinner", []);
+    },
+
     hide: function () {
         exec(null, null, "StatusBar", "hide", []);
         StatusBar.isVisible = false;
+    },
+
+    showSpinner: function () {
+        exec(null, null, "StatusBar", "showSpinner", []);
     },
 
     show: function () {

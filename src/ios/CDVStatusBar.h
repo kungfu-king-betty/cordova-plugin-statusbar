@@ -42,6 +42,9 @@
 - (void) backgroundColorByName:(CDVInvokedUrlCommand*)command;
 - (void) backgroundColorByHexString:(CDVInvokedUrlCommand*)command;
 
+- (void) hideSpinner:(CDVInvokedUrlCommand*)command;
+- (void) showSpinner:(CDVInvokedUrlCommand*)command;
+
 - (void) hide:(CDVInvokedUrlCommand*)command;
 - (void) show:(CDVInvokedUrlCommand*)command;
     

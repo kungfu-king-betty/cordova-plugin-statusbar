@@ -359,6 +359,11 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
     }
 }
 
+- (void) hideSpinner:(CDVInvokedUrlCommand*)command
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
 - (void) hide:(CDVInvokedUrlCommand*)command
 {
     _statusBarVisible = NO;
@@ -388,6 +393,11 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
         UIApplication* app = [UIApplication sharedApplication];
         [app setStatusBarHidden:NO];
     }
+}
+
+- (void) showSpinner:(CDVInvokedUrlCommand*)command
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
 - (void) show:(CDVInvokedUrlCommand*)command
