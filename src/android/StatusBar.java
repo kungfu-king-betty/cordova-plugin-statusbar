@@ -36,8 +36,18 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import java.util.Arrays;
 
+import android.content.Context;
+import android.content.Intent;
+import android.app.PendingIntent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
+import android.R;
+
 public class StatusBar extends CordovaPlugin {
     private static final String TAG = "StatusBar";
+    private static int NOTIFICATION_ID = 1234;
 
     /**
      * Sets the context of the Command. This can then be used to do things like
@@ -203,6 +213,35 @@ public class StatusBar extends CordovaPlugin {
             return true;
         }
 
+        if ("showSpinner".equals(action)) {
+            this.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // NOTIFICATION_ID = UUID.randomUUID();
+                        showSpinner(NOTIFICATION_ID);
+                    } catch (Exception ignore) {
+                        System.out.println("Spinner Error:" + ignore);
+                    }
+                }
+            });
+            return true;
+        }
+
+        if ("hideSpinner".equals(action)) {
+            this.cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        hideSpinner(NOTIFICATION_ID);
+                    } catch (Exception ignore) {
+                        System.out.println("Spinner Error:" + ignore);
+                    }
+                }
+            });
+            return true;
+        }
+
         return false;
     }
 
@@ -272,5 +311,54 @@ public class StatusBar extends CordovaPlugin {
                 LOG.e(TAG, "Invalid style, must be either 'default', 'lightcontent' or the deprecated 'blacktranslucent' and 'blackopaque'");
             }
         }
+    }
+
+    private void showSpinner(int THIS_NOTIFICATION_ID) {
+        Context this_ctx = (Context) this.cordova.getActivity();
+
+        NotificationManager mNotificationManager =
+                    (NotificationManager) this_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String CHANNEL_ID = "ssm_channel_" + THIS_NOTIFICATION_ID;
+        CharSequence name = "ssm_channel";
+        String Description = "This is a notification channel for the SSM Mobile app";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(false);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this_ctx, 0, intent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this_ctx, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_popup_sync)
+            .setContentTitle("SSM Mobile Refreshing")
+            .setContentText("The SSM Mobile app is currently refreshing...")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            // Set the intent that will fire when the user taps the notification
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(false);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this_ctx);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(THIS_NOTIFICATION_ID, builder.build());
+    }
+
+    private void hideSpinner(int THIS_NOTIFICATION_ID) {
+        Context this_ctx = (Context) this.cordova.getActivity();
+
+        NotificationManager notificationManager = 
+                    (NotificationManager) this_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        
+        notificationManager.cancel(THIS_NOTIFICATION_ID);
     }
 }
