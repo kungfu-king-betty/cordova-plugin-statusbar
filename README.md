@@ -117,6 +117,7 @@ Although in the global scope, it is not available until after the `deviceready` 
 - StatusBar.styleBlackOpaque
 - StatusBar.backgroundColorByName
 - StatusBar.backgroundColorByHexString
+- StatusBar.styleNavigationBar
 - StatusBar.hide
 - StatusBar.show
 - StatusBar.hideSpinner
@@ -334,7 +335,7 @@ Supported Platforms
 - iOS
 - Android
 
-StatusBar.hideSpinner
+StatusBar.showSpinner
 =================
 
 Show the loading spinner in the statusbar.
