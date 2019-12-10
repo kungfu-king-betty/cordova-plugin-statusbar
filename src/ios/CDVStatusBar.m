@@ -288,9 +288,34 @@ static const void *kStatusBarStyle = &kStatusBarStyle;
     }
 }
 
+- (void) styleNavigationBar:(CDVInvokedUrlCommand*)command
+{   
+    @try {
+        id r = [command argumentAtIndex:0];
+        id g = [command argumentAtIndex:1];
+        id b = [command argumentAtIndex:2];
+        id a = [command argumentAtIndex:3];
+
+        UIColor *colour = [[UIColor alloc]initWithRed:[r doubleValue]/255.0 green:[g doubleValue]/255.0 blue:[b doubleValue]/255.0 alpha:[a doubleValue]];
+        self.window.rootViewController.view.backgroundColor = colour;
+        self.viewController.view.backgroundColor = colour;
+        self.webView.scrollView.backgroundColor = colour;
+    } @catch (NSException *exception) {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:(NSString*)exception.reason] callbackId:command.callbackId];
+        
+        NSLog(@"NAV BAR STYLING ERROR: %@", exception.reason);
+        NSLog(@"Arguments passed", command);
+        NSLog(@"Full Exception:", exception);
+    }
+}
+
 - (void) styleDefault:(CDVInvokedUrlCommand*)command
 {
-    [self setStyleForStatusBar:UIStatusBarStyleDefault];
+    if (@available(iOS 13.0, *)) {
+        [self setStyleForStatusBar:UIStatusBarStyleDarkContent];
+    } else {
+        [self setStyleForStatusBar:UIStatusBarStyleDefault];
+    }
 }
 
 - (void) styleLightContent:(CDVInvokedUrlCommand*)command

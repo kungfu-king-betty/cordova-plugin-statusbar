@@ -219,7 +219,7 @@ public class StatusBar extends CordovaPlugin {
                 public void run() {
                     try {
                         // NOTIFICATION_ID = UUID.randomUUID();
-                        showSpinner(NOTIFICATION_ID);
+                        showSpinner(NOTIFICATION_ID, args.getString(0), args.getString(1));
                     } catch (Exception ignore) {
                         System.out.println("Spinner Error:" + ignore);
                     }
@@ -313,24 +313,23 @@ public class StatusBar extends CordovaPlugin {
         }
     }
 
-    private void showSpinner(int THIS_NOTIFICATION_ID) {
+    private void showSpinner(int THIS_NOTIFICATION_ID, String notification_title, String notification_text) {
         Context this_ctx = (Context) this.cordova.getActivity();
 
         NotificationManager mNotificationManager =
                     (NotificationManager) this_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        String CHANNEL_ID = "ssm_channel_" + THIS_NOTIFICATION_ID;
-        CharSequence name = "ssm_channel";
-        String Description = "This is a notification channel for the SSM Mobile app";
+        Sting app_name = getApplicationName(this_ctx);
+        String CHANNEL_ID = app_name + "_channel_" + THIS_NOTIFICATION_ID;
+        CharSequence name = app_name + "_channel";
+        String Description = "This is a notification channel for the "+app_name+" app";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             mChannel.setDescription(Description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.enableLights(false);
+            mChannel.enableVibration(false);
             mChannel.setShowBadge(false);
             mNotificationManager.createNotificationChannel(mChannel);
         }
@@ -341,12 +340,13 @@ public class StatusBar extends CordovaPlugin {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this_ctx, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_popup_sync)
-            .setContentTitle("SSM Mobile Refreshing")
-            .setContentText("The SSM Mobile app is currently refreshing...")
+            .setContentTitle(notification_title)
+            .setContentText(notification_text)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
-            .setAutoCancel(false);
+            .setAutoCancel(false)
+            .setTimeoutAfter(300000);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this_ctx);
         // notificationId is a unique int for each notification that you must define
@@ -360,5 +360,11 @@ public class StatusBar extends CordovaPlugin {
                     (NotificationManager) this_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         
         notificationManager.cancel(THIS_NOTIFICATION_ID);
+    }
+
+    private String getApplicationName(Context app_ctx) {
+        ApplicationInfo applicationInfo = app_ctx.getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : app_ctx.getString(stringId);
     }
 }

@@ -48,6 +48,11 @@ var StatusBar = {
         exec(null, null, "StatusBar", "overlaysWebView", [doOverlay]);
     },
 
+    styleNavigationBar: function (r=0,g=0,b=0,a=1) {
+        exec(null, null, "StatusBar", "styleNavigationBar", [r,g,b,a]);
+        $("html").css("background-color","rgba("+r+","+g+","+b+","+a+")");
+    },
+
     styleDefault: function () {
         // dark text ( to be used on a light background )
         exec(null, null, "StatusBar", "styleDefault", []);
@@ -94,8 +99,8 @@ var StatusBar = {
         StatusBar.isVisible = false;
     },
 
-    showSpinner: function () {
-        exec(null, null, "StatusBar", "showSpinner", []);
+    showSpinner: function (notify_title="Notification Title", notify_text="Notification text goes here.") {
+        exec(null, null, "StatusBar", "showSpinner", [notify_title,notify_text]);
     },
 
     show: function () {
