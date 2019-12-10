@@ -43,6 +43,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.app.NotificationManager;
 import android.app.NotificationChannel;
+import android.content.pm.ApplicationInfo;
 import android.R;
 
 public class StatusBar extends CordovaPlugin {
@@ -319,7 +320,7 @@ public class StatusBar extends CordovaPlugin {
         NotificationManager mNotificationManager =
                     (NotificationManager) this_ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Sting app_name = getApplicationName(this_ctx);
+        String app_name = getApplicationName(this_ctx);
         String CHANNEL_ID = app_name + "_channel_" + THIS_NOTIFICATION_ID;
         CharSequence name = app_name + "_channel";
         String Description = "This is a notification channel for the "+app_name+" app";
