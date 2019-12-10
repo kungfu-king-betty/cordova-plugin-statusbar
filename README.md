@@ -119,6 +119,8 @@ Although in the global scope, it is not available until after the `deviceready` 
 - StatusBar.backgroundColorByHexString
 - StatusBar.hide
 - StatusBar.show
+- StatusBar.hideSpinner
+- StatusBar.showSpinner
 
 Properties
 --------
@@ -270,6 +272,20 @@ Supported Platforms
 - Windows Phone 8
 - Windows Phone 8.1
 
+StatusBar.styleNavigationBar
+=================
+
+Set the color for the background of the iOS home indicator for iPhone X and later.
+
+    StatusBar.styleNavigationBar(r,g,b,a);
+
+There is no way to style the actual home slider, this handled by iOS automatically based on content beneath it.
+
+Supported Platforms
+-------------------
+
+- iOS
+
 StatusBar.hide
 =================
 
@@ -304,6 +320,35 @@ Supported Platforms
 - Windows Phone 8
 - Windows Phone 8.1
 
+StatusBar.hideSpinner
+=================
+
+Hides the loading spinner in the statusbar.
+
+    StatusBar.hideSpinner();
+
+
+Supported Platforms
+-------------------
+
+- iOS
+- Android
+
+StatusBar.hideSpinner
+=================
+
+Show the loading spinner in the statusbar.
+    
+    // show the spinner in iOS
+    StatusBar.showSpinner();
+    //show the spinner for Android
+    StatusBar.showSpinner(notification_title, notification_text);
+
+Supported Platforms
+-------------------
+
+- iOS
+- Android
 
 StatusBar.isVisible
 =================
